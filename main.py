@@ -73,9 +73,11 @@ def VisualizarMaterias(ListaMaterias):
 ListaMaterias = []
 
 while True:
-    Menu = int(input('1. Cadastrar Matéria\n'
-                     '2. Visualizar Matérias de Hoje\n'
-                     '3. Encerrar\n'
+    Menu = int(input('1. Cadastrar Tarefas do dia'
+                     '2. Cadastrar Matéria\n'
+                     '3. Visualizar Matérias de Hoje\n'
+                     '4. Remover Matérias\n'
+                     '5. Encerrar\n'
                      'O que deseja fazer: '))
 
     if Menu == 1:
