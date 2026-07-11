@@ -1,13 +1,24 @@
-def CadastroDeMaterias():
-    Materias = {}
+#Realiza o Cadastro de Tarefas, Verifica se o usuário deseja estudar o fazer outra coisa, se o usuário preferir
+# estudar, ele deverá escolher uma matéria já cadastrada ou cadastrar uma nova, o mesmo deve acontecer com demais
+# atividades
+def CadastroDeTarefas():
+    Tipo = int(input('1. Estudos'
+                      '2. Outros'
+                      'Qual atividade deseja cadastrar hoje?'))
+    if Tipo == 1:
+        
 
-    Materia = input('Matéria: ').strip()
+#Realiza o cadastro das matérias
+def CadastroDeMaterias():
+    Materia = {}
+
+    Materiainput = input('Matéria: ').strip()
     while True:
         if Materia:
-            Materias["Materia"] = Materia
+            Materia["Materia"] = Materiainput
             break
         else:
-            Materia = input('Digite uma matéria válida: ').strip()
+            Materiainput = input('Digite uma matéria válida: ').strip()
 
     Prioridade = input('1. Alta\n'
                        '2. Média\n'
@@ -16,7 +27,7 @@ def CadastroDeMaterias():
     while True:
         if Prioridade.isnumeric():
             if int(Prioridade) in (1, 2, 3):
-                Materias['Prioridade'] = int(Prioridade)
+                Materia['Prioridade'] = int(Prioridade)
                 break
 
         Prioridade = input('Digite um tipo de prioridade válida: ')
@@ -26,12 +37,12 @@ def CadastroDeMaterias():
         if Tempo.isnumeric():
             Tempo = int(Tempo)
             if Tempo > 0:
-                Materias["Tempo"] = Tempo
+                Materia["Tempo"] = Tempo
                 break
 
         Tempo = input('Digite uma quantidade de tempo válida: ')
 
-    return Materias
+    return Materia
 
 def TempoTotal(ListaMaterias):
     Total = 0
@@ -44,20 +55,27 @@ def TempoTotal(ListaMaterias):
 
     return f'{TotalHoras:02d}:{TotalMin:02d}'
 
+def OrganizarMaterias(ListaMaterias):
+
+    if not ListaMaterias:
+        return
+
+    for _ in range(len(ListaMaterias) - 1):
+        for j in range(len(ListaMaterias) - 1):
+            if ListaMaterias[j]["Prioridade"] > ListaMaterias[j+1]["Prioridade"]:
+                ListaMaterias[j], ListaMaterias[j+1] = ListaMaterias[j+1], ListaMaterias[j]
+
 def VisualizarMaterias(ListaMaterias):
     NiveisPrioridades = {
         1: "Alta",
         2: "Média",
         3: "Baixa",
     }
+    OrganizarMaterias(ListaMaterias)
 
     if not ListaMaterias:
         print('Não há matérias para estudar hoje')
         return
-    for _ in range(len(ListaMaterias) - 1):
-        for j in range(len(ListaMaterias) - 1):
-            if ListaMaterias[j]["Prioridade"] > ListaMaterias[j+1]["Prioridade"]:
-                ListaMaterias[j], ListaMaterias[j+1] = ListaMaterias[j+1], ListaMaterias[j]
 
     for i, Materia in enumerate(ListaMaterias, start=1):
             print(f'{i}. {Materia["Materia"]} | Prioridade: {NiveisPrioridades[Materia["Prioridade"]]}  | Tempo: '
@@ -70,18 +88,24 @@ ListaMaterias = []
 
 while True:
     Menu = int(input('1. Cadastrar Tarefas do dia\n'
-                     '2. Cadastrar Matéria\n'
-                     '3. Visualizar Matérias de Hoje\n'
-                     '4. Remover Matérias\n'
-                     '5. Encerrar\n'
+                     '2. Visualizar Matérias\n'
+                     '3. Visualizar Afazeres de hoje\n'
+                     '4. Remover Tarefa\n'
+                     '5. Remover Matéria\n'
+                     '6. Encerrar\n'
                      'O que deseja fazer: '))
 
     if Menu == 1:
-        Materia = CadastroDeMaterias()
-        ListaMaterias.append(Materia)
+
     elif Menu == 2:
         VisualizarMaterias(ListaMaterias)
     elif Menu == 3:
+
+    elif Menu == 4:
+
+    elif Menu == 5:
+
+    elif Menu == 6:
         break
     else:
         print('Opção invalida! Tente novamente\n')
