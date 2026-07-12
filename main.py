@@ -9,39 +9,54 @@ def CadastroDeTarefas(ListaMaterias):
                 'Qual atividade deseja cadastrar hoje?')
     while True:
         if Tipo.isnumeric() and int(Tipo) in (1, 2):
-            if int(Tipo) == 1:
+            Tipo = int(Tipo)
+            if Tipo == 1:
                 Tarefa["Tipo"] = 'Estudos'
                 Escolha = input('1. Escolher Materia\n'
                                     '2. Cadastrar Nova Matéria\n'
                                     ':')
                 while True:
-                    if int(Escolha) == 1:
-                        if not ListaMaterias:
-                            print('Não há matérias cadastradas')
-                            Op = input('Deseja cadastrar uma nova matéria?'
-                                       '1. Sim'
-                                       '2. Não'
-                                       ':')
+                    if Escolha.isnumeric() and int(Escolha) in (1, 2):
+                        Escolha = int(Escolha)
+                        if Escolha == 1:
+                            if not ListaMaterias:
+                                print('Não há matérias cadastradas')
+                                Op = input('Deseja cadastrar uma nova matéria?\n'
+                                           '1. Sim\n'
+                                           '2. Não\n'
+                                           ':')
+                                while True:
+                                    if Op.isnumeric() and int(Op) in (1, 2):
+                                        Op = int(Op)
+                                        if Op == 1:
+                                            Escolha = '2'
+                                            break
+                                        elif Op == 2:
+                                            return
+                                    else:
+                                        Op = input("Digite uma opção válida: ")
+
+                                continue
+
+                            for i, Materia in enumerate(ListaMaterias, start= 1):
+                                print(f'{i}. {Materia}\n')
+                            IndiceMateria = input('Matéria: ')
                             while True:
-                                if Op == 1:
+                                if IndiceMateria.isnumeric():
+                                    IndiceMateria = int(IndiceMateria)
+                                    if IndiceMateria >= 1 and IndiceMateria <= len(ListaMaterias):
+                                        Tarefa["Materia"] = ListaMaterias[IndiceMateria - 1]
+                                        break
+                                    else:
+                                        IndiceMateria = input('Digite uma opção válida: ')
+                                else:
+                                    IndiceMateria = input('Digite uma opção válida: ')
 
-                        for i, Materia in enumerate(ListaMaterias, start= 1):
-                            print(f'{i}. {Materia}\n')
-                        IndiceMateria = int(input('Matéria: '))
-                        if IndiceMateria >= 1 and IndiceMateria <= len(ListaMaterias):
-                            Tarefa["Materia"] = ListaMaterias[IndiceMateria - 1]
                         else:
-                            Escolha = input('Digite uma opção válida: ')
-                            continue
-
-                    elif int(Escolha) == 2:
-                        NovaMateria = CadastroDeMaterias()
-                        ListaMaterias.append(NovaMateria)
-                        Tarefa["Materia"] = NovaMateria
-                    else:
-                        Escolha = input('Digite uma opção válida: ')
-                        continue
-                    break
+                            NovaMateria = CadastroDeMaterias()
+                            ListaMaterias.append(NovaMateria)
+                            Tarefa["Materia"] = NovaMateria
+                        break
 
             else:
                 Tarefa["Tipo"] = 'Outros'
@@ -52,7 +67,7 @@ def CadastroDeTarefas(ListaMaterias):
                         break
                     NovaTarefa = input('Digite uma tarefa válida: ').strip()
         else:
-            Tipo = input('Digite uma opção válida: ')
+            Tipo = input('Digite uma opção válida: ').strip()
             continue
         break
 
@@ -62,7 +77,7 @@ def CadastroDeTarefas(ListaMaterias):
                        'Escolha o nível de prioridade: ')
     while True:
         if Prioridade.isnumeric():
-            if int(Prioridade) in (1, 2, 3):
+            if int(Prioridade) in range(1, 4):
                 Tarefa['Prioridade'] = int(Prioridade)
                 break
 
@@ -96,8 +111,8 @@ def CadastroDeMaterias():
 def TempoTotal(ListaTarefas):
     Total = 0
 
-    for Materia in ListaTarefas:
-        Total += Materia["Tempo"]
+    for Tarefa in ListaTarefas:
+        Total += Tarefa["Tempo"]
 
     TotalHoras = Total // 60
     TotalMin = Total % 60
@@ -125,7 +140,7 @@ def VisualizarMaterias(ListaMaterias):
         print(f'{i}. {Materia}')
 
 #Imprime as tarefas do dia já ordenadas, caso haja
-def VisualizarListaTarefas(ListaTarefas):
+def VisualizarTarefas(ListaTarefas):
     NiveisPrioridades = {
         1: "Alta",
         2: "Média",
@@ -155,25 +170,28 @@ ListaTarefas = []
 ListaMaterias = []
 
 while True:
-    Menu = int(input('1. Cadastrar Tarefas do dia\n'
-                     '2. Visualizar Matérias\n'
-                     '3. Visualizar Afazeres de hoje\n'
-                     '4. Remover Tarefa\n'
-                     '5. Remover Matéria\n'
-                     '6. Encerrar\n'
-                     'O que deseja fazer: '))
-
-    if Menu == 1:
-        ListaTarefas.append(CadastroDeTarefas(ListaMaterias))
-    elif Menu == 2:
-        VisualizarMaterias(ListaMaterias)
-    elif Menu == 3:
-        VisualizarListaTarefas(ListaTarefas)
-    elif Menu == 4:
-        RemoverTarefa(ListaTarefas)
-    elif Menu == 5:
-        RemoverMateria(ListaMaterias)
-    elif Menu == 6:
-        break
+    Menu = input('1. Cadastrar Tarefas do dia\n'
+                 '2. Visualizar Matérias\n'
+                 '3. Visualizar Afazeres de hoje\n'
+                 '4. Remover Tarefa\n'
+                 '5. Remover Matéria\n'
+                 '6. Encerrar\n'
+                 'O que deseja fazer: ')
+    if Menu.isnumeric() and int(Menu) in range(1, 7):
+        Menu = int(Menu)
+        if Menu == 1:
+            Tarefa = CadastroDeTarefas(ListaMaterias)
+            if Tarefa is not None:
+                ListaTarefas.append(Tarefa)
+        elif Menu == 2:
+            VisualizarMaterias(ListaMaterias)
+        elif Menu == 3:
+            VisualizarTarefas(ListaTarefas)
+        elif Menu == 4:
+            RemoverTarefa(ListaTarefas)
+        elif Menu == 5:
+            RemoverMateria(ListaMaterias)
+        elif Menu == 6:
+            break
     else:
-        print('Opção invalida! Tente novamente\n')
+        print('Opção invalida! Tente novamente:')
